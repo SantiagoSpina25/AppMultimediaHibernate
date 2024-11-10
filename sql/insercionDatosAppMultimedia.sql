@@ -23,6 +23,7 @@ INSERT INTO `Serie` (titulo, anio_lanzamiento, num_temporadas, imagen_url) VALUE
 ('The Office', 2005, 9, 'https://pics.filmaffinity.com/The_Office_Serie_de_TV-210023284-large.jpg');
 
 
+
 INSERT INTO `Temporada` (numero_temporada, numero_episodios, fecha_lanzamiento, IdSerie) VALUES
 -- Breaking Bad
 (1, 7, '2008-01-20', 1),
@@ -82,13 +83,13 @@ INSERT INTO `Genero` (idGenero, nombre, descripcion) VALUES
 (5, 'Terror', 'Películas de terror y suspenso.');
 
 
-INSERT INTO `Lista_de_vistos` (titulo, tipo_contenido, fecha_agregado, estado, idUsuario, idPelicula, idSerie) VALUES
-('Inception', 'pelicula', '2023-10-01', 'visto', 1, 1, NULL),
-('Breaking Bad', 'serie', '2023-10-02', 'en progreso', 2, NULL, 1),
-('The Godfather', 'pelicula', '2023-10-03', 'por ver', 3, 2, NULL),
-('The Office', 'serie', '2023-10-04', 'visto', 4, NULL, 5),
-('Stranger Things', 'serie', '2023-10-05', 'por ver', 5, NULL, 3),
-('The Godfather', 'pelicula', '2023-10-03', 'por ver', 1, 2, NULL);
+INSERT INTO `Lista_de_vistos` (titulo, tipo_contenido, fecha_agregado, estado, idUsuario) VALUES
+('Inception', 'pelicula', '2023-10-01', 'visto', 1),
+('Breaking Bad', 'serie', '2023-10-02', 'en progreso', 2),
+('The Godfather', 'pelicula', '2023-10-03', 'por ver', 3),
+('The Office', 'serie', '2023-10-04', 'visto', 4),
+('Stranger Things', 'serie', '2023-10-05', 'por ver', 5),
+('The Godfather', 'pelicula', '2023-10-03', 'por ver', 1);
 
 
 INSERT INTO `Actor` (nombre, fecha_nacimiento, nacionalidad) VALUES
@@ -128,4 +129,12 @@ INSERT INTO serie_actor (idSerie, idActor) VALUES
 
 INSERT INTO pelicula_actor (idPelicula, idActor) VALUES (1, 1); 
 
+INSERT INTO lista_pelicula (idLista, idPelicula) VALUES
+(1,1),
+(3,2),
+(6,2);
 
+INSERT INTO lista_serie (idLista, idSerie) VALUES
+(2,1),
+(4,5),
+(5,3);
