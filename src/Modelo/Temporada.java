@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package appmultimediahibernate;
+package Modelo;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -44,11 +44,12 @@ public class Temporada implements Serializable {
     public Temporada() {
     }
 
-    public Temporada(Integer idTemporada, Integer numero_temporada, Integer numero_episodios, Date fecha_lanzamiento) {
+    public Temporada(Integer idTemporada, Integer numero_temporada, Integer numero_episodios, Date fecha_lanzamiento, Serie serie) {
         this.idTemporada = idTemporada;
         this.numero_temporada = numero_temporada;
         this.numero_episodios = numero_episodios;
         this.fecha_lanzamiento = fecha_lanzamiento;
+        this.serie = serie;
     }
 
     public Integer getIdTemporada() {

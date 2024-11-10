@@ -2,18 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package appmultimediahibernate;
+package Modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
@@ -24,7 +18,6 @@ import javax.persistence.Table;
 public class Genero implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idGenero")
     private Integer idGenero;
@@ -32,6 +25,14 @@ public class Genero implements Serializable{
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+    
+    //Relacion N.M con Serie
+    @ManyToMany(mappedBy = "generos")
+    private List<Serie> series;
+    
+    //Relacion N.M con Pelicula
+    @ManyToMany(mappedBy = "generos")
+    private List<Pelicula> peliculas;
 
     public Genero() {
     }
@@ -64,6 +65,22 @@ public class Genero implements Serializable{
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Serie> getSeries() {
+        return series;
+    }
+
+    public void setSeries(List<Serie> series) {
+        this.series = series;
+    }
+
+    public List<Pelicula> getPeliculas() {
+        return peliculas;
+    }
+
+    public void setPeliculas(List<Pelicula> peliculas) {
+        this.peliculas = peliculas;
     }
 
     @Override

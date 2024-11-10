@@ -3,13 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package appmultimediahibernate;
+package Vista;
 
+import Controlador.ControladorCRUD;
+import Modelo.*;
 import java.util.List;
-import java.util.Iterator;
 import java.util.Scanner;
 import org.hibernate.HibernateException;
-import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -26,17 +26,17 @@ public class AppMultimediaHibernate {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-
+        
         try {
             // Abrir la sesión de Hibernate
             SessionFactory instancia = (SessionFactory) new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
             Session session = instancia.openSession();
-            session.beginTransaction();
             System.out.println("Base de datos conectada correctamente");
 
             int eleccion;
 
             do {
+                session.beginTransaction();
                 System.out.println("Que desea realizar?");
                 System.out.println("1. SELECT");
                 System.out.println("2. INSERT");
@@ -45,11 +45,11 @@ public class AppMultimediaHibernate {
                 System.out.println("5. SALIR");
 
                 eleccion = sc.nextInt();
-
+                System.out.println("------------------------------------------");
                 switch (eleccion) {
                     case 1://SELECT
                         List<?> resultados = null;
-                        resultados = obtenerTodos(Serie.class, session);
+                        resultados = ControladorCRUD.obtenerTodos(Episodio.class, session);
 
                         for (int i = 0; i < resultados.size(); i++) {
                             System.out.println(resultados.get(i));
@@ -57,22 +57,23 @@ public class AppMultimediaHibernate {
 
                         break;
                     case 2://INSERT
-                        //insertarDato(Serie.class, session);
+                        ControladorCRUD.insertarDato(session, sc);
                         break;
                     case 3://UPDATE
-                        //conexion.actualizarDato();
+                        ControladorCRUD.actualizarDato(session,sc);
                         break;
                     case 4://DELETE
-                        //conexion.borrarDato();
+                        ControladorCRUD.borrarDato(session,sc);
                         break;
                     case 5://salir
                         System.out.println("Saliendo...");
-                        session.close();
+                        //session.close();
                         break;
                     case 6:
                         System.out.println("Indica un numero correcto");
                         break;
                 }
+                session.getTransaction().commit();
                 System.out.println("------------------------------------------");
             } while (eleccion != 5);
 
@@ -80,25 +81,6 @@ public class AppMultimediaHibernate {
             System.out.println(e);
         }
 
-    }
-
-    //Este metodo obtiene todos los resultados (todos los campos) de una clase especificada.
-    //Es un metodo generico <T> (devuelve un List)
-    public static <T> List<T> obtenerTodos(Class<T> entidad, Session session) {
-        List<T> resultados = null;
-
-        try {
-
-            Query<T> query = session.createQuery("FROM " + entidad.getName() , entidad);
-            resultados = query.getResultList();
-
-            session.getTransaction().commit();
-
-        } catch (HibernateException he) {
-            System.out.println(he);
-        }
-
-        return resultados;
     }
 
 }

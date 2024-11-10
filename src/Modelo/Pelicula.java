@@ -3,17 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package appmultimediahibernate;
+package Modelo;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
@@ -38,12 +33,41 @@ public class Pelicula implements Serializable {
     private Integer duracion;
     @Column(name = "url_imagen")
     private String url_imagen;
+    
+    //Relacion N.M con Lista_de_vistos
+    @ManyToMany
+    @JoinTable(
+            name = "lista_pelicula",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idPelicula"),
+            inverseJoinColumns = @JoinColumn(name = "idLista")
+    )
+    private List<Lista_de_vistos> listas_de_vistos;
+    
+    //Relacion N.M con Actor
+    @ManyToMany
+    @JoinTable(
+            name = "pelicula_actor",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idPelicula"),
+            inverseJoinColumns = @JoinColumn(name = "idActor")
+    )
+    private List<Actor> actores;
+    
+    //Relacion N.M con Genero
+    @ManyToMany
+    @JoinTable(
+            name = "pelicula_genero",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idPelicula"),
+            inverseJoinColumns = @JoinColumn(name = "idGenero")
+    )
+    private List<Genero> generos;
+    
 
     public Pelicula() {
         
     }
     
-    public Pelicula(String titulo, Integer anio_lanzamiento, Integer duracion, String url_imagen) {
+    public Pelicula(Integer idPelicula, String titulo, Integer anio_lanzamiento, Integer duracion, String url_imagen) {
+        this.idPelicula = idPelicula;
         this.titulo = titulo;
         this.anio_lanzamiento = anio_lanzamiento;
         this.duracion = duracion;
@@ -88,6 +112,30 @@ public class Pelicula implements Serializable {
         this.url_imagen = url_imagen;
     }
 
+    public List<Lista_de_vistos> getListas_de_vistos() {
+        return listas_de_vistos;
+    }
+
+    public void setListas_de_vistos(List<Lista_de_vistos> listas_de_vistos) {
+        this.listas_de_vistos = listas_de_vistos;
+    }
+
+    public List<Actor> getActores() {
+        return actores;
+    }
+
+    public void setActores(List<Actor> actores) {
+        this.actores = actores;
+    }
+
+    public List<Genero> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(List<Genero> generos) {
+        this.generos = generos;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -112,8 +160,10 @@ public class Pelicula implements Serializable {
 
     @Override
     public String toString() {
-        return "Pelicula{" + "idPelicula=" + idPelicula + '}';
+        return "Pelicula{" + "idPelicula=" + idPelicula + ", titulo=" + titulo + ", anio_lanzamiento=" + anio_lanzamiento + ", duracion=" + duracion + ", url_imagen=" + url_imagen + '}';
     }
+
+    
 
     
 

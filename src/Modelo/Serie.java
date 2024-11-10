@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package appmultimediahibernate;
+package Modelo;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +16,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "serie")
-public class Serie implements Serializable{
+public class Serie implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,17 +32,39 @@ public class Serie implements Serializable{
     private Integer num_temporadas;
     @Column(name = "imagen_url")
     private String imagen_url;
-    
+
     //Relacion 1.N con Temporada
     //mappedBy indica que entidad no tiene la foreign key, en este caso, serie no tiene la clave, sino que la tiene temporada
     @OneToMany(mappedBy = "serie")
     private List<Temporada> temporadas;
-    
-    //Relacion 1.N con Lista_de_vistos
-    //mappedBy indica que entidad no tiene la foreign key, en este caso, serie no tiene la clave, sino que la tiene lista_de_vistos
-    @OneToMany(mappedBy = "serie")
-    private List<Temporada> series;
 
+    //Relacion N.M con Actor
+    @ManyToMany
+    @JoinTable(
+            name = "serie_actor",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idSerie"),
+            inverseJoinColumns = @JoinColumn(name = "idActor")
+    )
+    private List<Actor> actores;
+    
+    //Relacion N.M con Genero
+    @ManyToMany
+    @JoinTable(
+            name = "serie_genero",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idSerie"),
+            inverseJoinColumns = @JoinColumn(name = "idGenero")
+    )
+    private List<Genero> generos;
+
+    //Relacion N.M con Lista_de_vistos
+    @ManyToMany
+    @JoinTable(
+            name = "lista_serie",//Tabla intermedia
+            joinColumns = @JoinColumn(name = "idSerie"),
+            inverseJoinColumns = @JoinColumn(name = "idLista")
+    )
+    private List<Lista_de_vistos> listas_de_vistos;
+    
     public Serie() {
     }
 
@@ -101,6 +124,30 @@ public class Serie implements Serializable{
         this.temporadas = temporadas;
     }
 
+    public List<Actor> getActores() {
+        return actores;
+    }
+
+    public void setActores(List<Actor> actores) {
+        this.actores = actores;
+    }
+
+    public List<Genero> getGeneros() {
+        return generos;
+    }
+
+    public void setGeneros(List<Genero> generos) {
+        this.generos = generos;
+    }
+
+    public List<Lista_de_vistos> getListas_de_vistos() {
+        return listas_de_vistos;
+    }
+
+    public void setListas_de_vistos(List<Lista_de_vistos> listas_de_vistos) {
+        this.listas_de_vistos = listas_de_vistos;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -127,7 +174,5 @@ public class Serie implements Serializable{
     public String toString() {
         return "Serie{" + "idSerie=" + idSerie + ", titulo=" + titulo + ", anio_lanzamiento=" + anio_lanzamiento + ", num_temporadas=" + num_temporadas + ", imagen_url=" + imagen_url + '}';
     }
-    
-    
-    
+
 }
