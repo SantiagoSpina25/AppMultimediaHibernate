@@ -12,7 +12,9 @@ import Modelo.Pelicula;
 import Modelo.Serie;
 import Modelo.Temporada;
 import Modelo.Usuario;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import org.hibernate.HibernateException;
@@ -36,14 +38,87 @@ public class ControladorCRUD {
 
         try {
 
-            Query<T> query = session.createQuery("FROM " + entidad.getName(), entidad);
+            Query<T> query = session.createQuery("FROM " + entidad.getName() + " p where p.titulo = 'Inception' ", entidad);
             resultados = query.getResultList();
+            
+            for (int i = 0; i < resultados.size(); i++) {
+                System.out.println(resultados.get(i));
+            }
 
         } catch (HibernateException he) {
             System.out.println(he);
         }
 
         return resultados;
+    }
+
+    public static void buscarDato(Session session, Scanner sc) {
+        try {
+            System.out.println("¿En qué tabla deseas buscar un registro?");
+            System.out.println("1. Actor");
+            System.out.println("2. Episodio");
+            System.out.println("3. Genero");
+            System.out.println("4. Lista_de_vistos");
+            System.out.println("5. Pelicula");
+            System.out.println("6. Serie");
+            System.out.println("7. Temporada");
+            System.out.println("8. Usuario");
+
+            int eleccionTabla = sc.nextInt();
+
+            switch (eleccionTabla) {
+                case 1://Buscar actor
+                    System.out.println("Que atributos desea buscar? (idActor, nombre, fecha_nacimiento, nacionalidad)");
+                    sc.nextLine();
+
+                    String atributosSeleccionados = sc.nextLine();
+
+                    System.out.println("Alguna condicion? (Presione 1 para omitr)");
+
+                    String condicionSeleccionada = sc.nextLine();
+
+                    if (condicionSeleccionada.equals("1")) {
+                        condicionSeleccionada = "";
+                    }
+
+                    Query query = session.createQuery("select " + atributosSeleccionados + " FROM Actor");
+                    List<Object[]> results = query.list();
+
+                    for (int i = 0; i < results.size(); i++) {
+                        for (int j = 0; j < results.size() ; j++) {
+                            System.out.println(Arrays.toString(results.get(i)));
+                        }
+                    }
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+
+                    break;
+                case 7:
+
+                    break;
+                case 8:
+
+                    break;
+                default:
+                    System.out.println("Opcion no valida");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public static void insertarDato(Session session, Scanner sc) {
@@ -256,17 +331,269 @@ public class ControladorCRUD {
 
     public static void actualizarDato(Session session, Scanner sc) {
 
-        System.out.println("¿En qué tabla deseas actualizar un registro?");
-        System.out.println("1. Actor");
-        System.out.println("2. Episodio");
-        System.out.println("3. Genero");
-        System.out.println("4. Lista_de_vistos");
-        System.out.println("5. Pelicula");
-        System.out.println("6. Serie");
-        System.out.println("7. Temporada");
-        System.out.println("8. Usuario");
+        try {
+            //Convierto la fechas (string) a Date
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-        int eleccionTabla = sc.nextInt();
+            System.out.println("¿En qué tabla deseas actualizar un registro?");
+            System.out.println("1. Actor");
+            System.out.println("2. Episodio");
+            System.out.println("3. Genero");
+            System.out.println("4. Lista_de_vistos");
+            System.out.println("5. Pelicula");
+            System.out.println("6. Serie");
+            System.out.println("7. Temporada");
+            System.out.println("8. Usuario");
+
+            int eleccionTabla = sc.nextInt();
+
+            switch (eleccionTabla) {
+                case 1: // Actualizar un Actor
+                    System.out.print("Ingrese el ID del actor que desea actualizar: ");
+                    int idActor = sc.nextInt();
+
+                    //Busco al actor en la bd
+                    Actor actor = session.get(Actor.class, idActor);
+
+                    if (actor != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores del actor: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo nombre del actor: ");
+                        String nuevoNombreActor = sc.nextLine();
+
+                        System.out.println("Nueva fecha de nacimiento: ");
+                        String nuevaFechaNacimientoActor = sc.next();
+
+                        System.out.println("Nueva nacionalidad: ");
+                        String nuevaNacionalidadActor = sc.next();
+
+                        actor.setNombre(nuevoNombreActor);
+                        actor.setFecha_nacimiento(formato.parse(nuevaFechaNacimientoActor));
+                        actor.setNacionalidad(nuevaNacionalidadActor);
+
+                        System.out.println("Actor " + actor.getIdActor() + " actualizado correctamente");
+                    }
+                    break;
+
+                case 2: // Insertar un episodio
+                    System.out.print("Ingrese el ID del episodio que desea actualizar: ");
+                    int idEpisodio = sc.nextInt();
+
+                    //Busco el episodio en la bd
+                    Episodio episodio = session.get(Episodio.class, idEpisodio);
+
+                    if (episodio != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores del episodio: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo titulo del episodio: ");
+                        String nuevoTituloEpisodio = sc.nextLine();
+
+                        System.out.println("Nueva duracion del episodio: ");
+                        int nuevaDuracionEpisodio = sc.nextInt();
+
+                        System.out.println("Nueva fecha de lanzamiento: ");
+                        String nuevaFechaLanzamientoEpisodio = sc.next();
+
+                        episodio.setTitulo(nuevoTituloEpisodio);
+                        episodio.setDuracion(nuevaDuracionEpisodio);
+                        episodio.setFecha_lanzamiento(formato.parse(nuevaFechaLanzamientoEpisodio));
+
+                        System.out.println("Episodio " + episodio.getIdEpisodio() + " actualizado correctamente");
+                    }
+                    break;
+
+                case 3://Actualizar genero
+                    System.out.print("Ingrese el ID del genero que desea actualizar: ");
+                    int idGenero = sc.nextInt();
+
+                    //Busco el genero en la bd
+                    Genero genero = session.get(Genero.class, idGenero);
+
+                    if (genero != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores del genero: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo nombre del genero: ");
+                        String nuevoNombreGenero = sc.nextLine();
+
+                        sc.nextLine();
+                        System.out.println("Nueva descripcion del genero: ");
+                        String nuevaDescripcionGenero = sc.nextLine();
+
+                        genero.setNombre(nuevoNombreGenero);
+                        genero.setDescripcion(nuevaDescripcionGenero);
+
+                        System.out.println("Genero " + genero.getIdGenero() + " actualizado correctamente");
+                    }
+                    break;
+
+                case 4://Actualizar lista_de_vistos
+                    System.out.print("Ingrese el ID de la lista de vistos que desea actualizar: ");
+                    int idListaVistos = sc.nextInt();
+
+                    //Busco la lista_de_vistos en la bd
+                    Lista_de_vistos lista_de_vistos = session.get(Lista_de_vistos.class, idListaVistos);
+
+                    if (lista_de_vistos != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores de la lista: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo titulo del contenido: ");
+                        String nuevoTituloContenido = sc.nextLine();
+
+                        System.out.println("Nuevo tipo_contenido del contenido (serie o pelicula):  ");
+                        String nuevoTipoContenido = sc.next();
+
+                        System.out.println("Nueva fecha de agregado: ");
+                        String nuevaFechaAgregadoContenido = sc.next();
+
+                        sc.nextLine();
+                        System.out.println("Nuevo estado (por ver, en progreso, visto): ");
+                        String nuevoEstado = sc.nextLine();
+
+                        lista_de_vistos.setTitulo(nuevoTituloContenido);
+                        lista_de_vistos.setTipo_contenido(nuevoTipoContenido);
+                        lista_de_vistos.setFecha_agregado(formato.parse(nuevaFechaAgregadoContenido));
+                        lista_de_vistos.setEstado(nuevoEstado);
+
+                        System.out.println("Lista " + lista_de_vistos.getIdLista() + " actualizada correctamente");
+                    }
+                    break;
+                case 5://Actualizar una pelicula
+                    System.out.print("Ingrese el ID de la pelicula que desea actualizar: ");
+                    int idPelicula = sc.nextInt();
+
+                    //Busco la pelicula en la bd
+                    Pelicula pelicula = session.get(Pelicula.class, idPelicula);
+
+                    if (pelicula != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores de la pelicula: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo titulo de la pelicula: ");
+                        String nuevoTituloPelicula = sc.nextLine();
+
+                        System.out.println("Nuevo año de lanzamiento:  ");
+                        int nuevoAnioLanzamiento = sc.nextInt();
+
+                        System.out.println("Nuevo duracion de pelicula:  ");
+                        int nuevaDuracionPelicula = sc.nextInt();
+
+                        System.out.println("Nuevo url de imagen: ");
+                        String nuevaUrlImagenPelicula = sc.next();
+
+                        pelicula.setTitulo(nuevoTituloPelicula);
+                        pelicula.setAnio_lanzamiento(nuevoAnioLanzamiento);
+                        pelicula.setDuracion(nuevaDuracionPelicula);
+                        pelicula.setUrl_imagen(nuevaUrlImagenPelicula);
+
+                        System.out.println("Pelicula " + pelicula.getIdPelicula() + " actualizada correctamente");
+                    }
+                    break;
+                case 6://Actualizar una serie
+                    System.out.print("Ingrese el ID de la serie que desea actualizar: ");
+                    int idSerie = sc.nextInt();
+
+                    //Busco la serie en la bd
+                    Serie serie = session.get(Serie.class, idSerie);
+
+                    if (serie != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores de la serie: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo titulo de la serie: ");
+                        String nuevoTituloSerie = sc.nextLine();
+
+                        System.out.println("Nuevo año de lanzamiento:  ");
+                        int nuevoAnioLanzamientoSerie = sc.nextInt();
+
+                        System.out.println("Nuevo numeto de temporadas:  ");
+                        int nuevoNumTemporadas = sc.nextInt();
+
+                        System.out.println("Nuevo url de imagen: ");
+                        String nuevaUrlImagenSerie = sc.next();
+
+                        serie.setTitulo(nuevoTituloSerie);
+                        serie.setAnio_lanzamiento(nuevoAnioLanzamientoSerie);
+                        serie.setNum_temporadas(nuevoNumTemporadas);
+                        serie.setImagen_url(nuevaUrlImagenSerie);
+
+                        System.out.println("Serie " + serie.getIdSerie() + " actualizada correctamente");
+                    }
+                    break;
+                case 7://Actualizar una temporada
+                    System.out.print("Ingrese el ID de la temporada que desea actualizar: ");
+                    int idTemporada = sc.nextInt();
+
+                    //Busco la temporada en la bd
+                    Temporada temporada = session.get(Temporada.class, idTemporada);
+
+                    if (temporada != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores de la temporada: ");
+                        System.out.println("Nuevo numero de la temporada: ");
+                        int nuevoNumTemporada = sc.nextInt();
+
+                        System.out.println("Nuevo numero de episodios: ");
+                        int nuevoNumEpisodios = sc.nextInt();
+
+                        System.out.println("Nueva fecha de lanzamiento:  ");
+                        String nuevaFechaLanzamientoTemporada = sc.next();
+
+                        temporada.setNumero_temporada(nuevoNumTemporada);
+                        temporada.setNumero_episodios(nuevoNumEpisodios);
+                        temporada.setFecha_lanzamiento(formato.parse(nuevaFechaLanzamientoTemporada));
+
+                        System.out.println("Temporada " + temporada.getIdTemporada() + " actualizada correctamente");
+                    }
+                    break;
+                case 8://Actualizar un usuario
+                    System.out.print("Ingrese el ID del usuario que desea actualizar: ");
+                    int idUsuario = sc.nextInt();
+
+                    //Busco el usuario en la bd
+                    Usuario usuario = session.get(Usuario.class, idUsuario);
+
+                    if (usuario != null) {
+                        System.out.println("------------------------------");
+                        System.out.println("Introduzca los nuevos valores del usuario: ");
+
+                        sc.nextLine();
+                        System.out.println("Nuevo nombre del usuario: ");
+                        String nuevoNombreUsuario = sc.nextLine();
+
+                        System.out.println("Nuevo correo de usuario: ");
+                        String nuevoCorreoUsuario = sc.next();
+
+                        System.out.println("Nuevo contraseña de usuario: ");
+                        String nuevaContraUsuario = sc.next();
+
+                        System.out.println("Nueva tipo de suscripcion (basica o premium):  ");
+                        String nuevoTipoSuscripcion = sc.next();
+
+                        usuario.setNombre(nuevoNombreUsuario);
+                        usuario.setCorreo(nuevoCorreoUsuario);
+                        usuario.setContrasena(nuevaContraUsuario);
+                        usuario.setTipo_suscripcion(nuevoTipoSuscripcion);
+
+                        System.out.println("Usuario " + usuario.getIdUsuario() + " actualizado correctamente");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Opción no válida");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public static void borrarDato(Session session, Scanner sc) {
@@ -403,4 +730,5 @@ public class ControladorCRUD {
         }
 
     }
+
 }
