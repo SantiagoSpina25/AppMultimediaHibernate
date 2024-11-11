@@ -49,7 +49,7 @@ public class AppMultimediaHibernate {
                 switch (eleccion) {
                     case 1://SELECT
                         List<?> resultados = null;
-                        resultados = ControladorCRUD.obtenerTodos(Episodio.class, session);
+                        resultados = ControladorCRUD.obtenerTodos(Actor.class, session);
 
                         for (int i = 0; i < resultados.size(); i++) {
                             System.out.println(resultados.get(i));
