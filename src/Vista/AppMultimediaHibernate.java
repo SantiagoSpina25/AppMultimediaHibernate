@@ -48,12 +48,6 @@ public class AppMultimediaHibernate {
                 System.out.println("------------------------------------------");
                 switch (eleccion) {
                     case 1://SELECT
-                        List<?> resultados = null;
-                        resultados = ControladorCRUD.obtenerTodos(Pelicula.class, session);
-
-                        for (int i = 0; i < resultados.size(); i++) {
-                            System.out.println(resultados.get(i));
-                        }
                         ControladorCRUD.buscarDato(session, sc);
                         break;
                     case 2://INSERT

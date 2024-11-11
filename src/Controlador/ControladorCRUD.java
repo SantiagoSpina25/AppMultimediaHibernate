@@ -27,31 +27,6 @@ import org.hibernate.query.Query;
  */
 public class ControladorCRUD {
 
-    public ControladorCRUD() {
-
-    }
-
-    //Este metodo obtiene todos los resultados (todos los campos) de una clase especificada.
-    //Es un metodo generico <T> (devuelve un List)
-    public static <T> List<T> obtenerTodos(Class<T> entidad, Session session) {
-        List<T> resultados = null;
-
-        try {
-
-            Query<T> query = session.createQuery("FROM " + entidad.getName() + " p where p.titulo = 'Inception' ", entidad);
-            resultados = query.getResultList();
-            
-            for (int i = 0; i < resultados.size(); i++) {
-                System.out.println(resultados.get(i));
-            }
-
-        } catch (HibernateException he) {
-            System.out.println(he);
-        }
-
-        return resultados;
-    }
-
     public static void buscarDato(Session session, Scanner sc) {
         try {
             System.out.println("¿En qué tabla deseas buscar un registro?");
@@ -64,56 +39,64 @@ public class ControladorCRUD {
             System.out.println("7. Temporada");
             System.out.println("8. Usuario");
 
+            String tablaSeleccionada = "";
+            
             int eleccionTabla = sc.nextInt();
-
+            
             switch (eleccionTabla) {
                 case 1://Buscar actor
                     System.out.println("Que atributos desea buscar? (idActor, nombre, fecha_nacimiento, nacionalidad)");
-                    sc.nextLine();
-
-                    String atributosSeleccionados = sc.nextLine();
-
-                    System.out.println("Alguna condicion? (Presione 1 para omitr)");
-
-                    String condicionSeleccionada = sc.nextLine();
-
-                    if (condicionSeleccionada.equals("1")) {
-                        condicionSeleccionada = "";
-                    }
-
-                    Query query = session.createQuery("select " + atributosSeleccionados + " FROM Actor");
-                    List<Object[]> results = query.list();
-
-                    for (int i = 0; i < results.size(); i++) {
-                        for (int j = 0; j < results.size() ; j++) {
-                            System.out.println(Arrays.toString(results.get(i)));
-                        }
-                    }
-
+                    tablaSeleccionada = "Actor";
                     break;
-                case 2:
-
+                case 2://Buscar episodio
+                    System.out.println("Que atributos desea buscar? (idEpisodio, titulo, duracion, fecha_lanzamiento)");
+                    tablaSeleccionada = "Episodio";
                     break;
-                case 3:
-
+                case 3://Buscar Genero
+                    System.out.println("Que atributos desea buscar? (idGenero, nombre, descripcion)");
+                    tablaSeleccionada = "Genero";
                     break;
-                case 4:
-
+                case 4://Buscar Lista_de_vistos
+                    System.out.println("Que atributos desea buscar? (idLista, titulo, tipo_contenido, fecha_agregado, estado)");
+                    tablaSeleccionada = "Lista_de_vistos";
                     break;
-                case 5:
-
+                case 5://Buscar Pelicula
+                    System.out.println("Que atributos desea buscar? (idPelicula, titulo, anio_lanzamiento, duracion, url_imagen)");
+                    tablaSeleccionada = "Pelicula";
                     break;
-                case 6:
-
+                case 6://Buscar Serie
+                    System.out.println("Que atributos desea buscar? (idSerie, titulo, anio_lanzamiento, num_temporadas, imagen_url)");
+                    tablaSeleccionada = "Serie";
                     break;
-                case 7:
-
+                case 7://Buscar Temporada
+                    System.out.println("Que atributos desea buscar? (idTemporada, numero_temporada, numero_episodios, fecha_lanzamiento)");
+                    tablaSeleccionada = "Temporada";
                     break;
-                case 8:
-
+                case 8://Buscar Usuario
+                    System.out.println("Que atributos desea buscar? (idUsuario, nombre, correo, contrasena, tipo_suscripcion)");
+                    tablaSeleccionada = "Usuario";
                     break;
                 default:
                     System.out.println("Opcion no valida");
+            }
+
+            sc.nextLine();
+
+            String atributosSeleccionados = sc.nextLine();
+
+            System.out.println("Alguna condicion? (Presione 1 para omitr)");
+
+            String condicionSeleccionada = sc.nextLine();
+
+            if (condicionSeleccionada.equals("1")) {
+                condicionSeleccionada = "";
+            }
+
+            Query query = session.createQuery("select " + atributosSeleccionados + " FROM  "+ tablaSeleccionada + " " + condicionSeleccionada);
+            List<Object[]> results = query.list();
+
+            for (int i = 0; i < results.size(); i++) {
+                System.out.println(Arrays.toString(results.get(i)));
             }
 
         } catch (Exception e) {
