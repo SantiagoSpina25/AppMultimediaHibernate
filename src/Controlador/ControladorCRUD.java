@@ -12,7 +12,9 @@ import Modelo.Pelicula;
 import Modelo.Serie;
 import Modelo.Temporada;
 import Modelo.Usuario;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import org.hibernate.HibernateException;
@@ -36,14 +38,87 @@ public class ControladorCRUD {
 
         try {
 
-            Query<T> query = session.createQuery("FROM " + entidad.getName(), entidad);
+            Query<T> query = session.createQuery("FROM " + entidad.getName() + " p where p.titulo = 'Inception' ", entidad);
             resultados = query.getResultList();
+            
+            for (int i = 0; i < resultados.size(); i++) {
+                System.out.println(resultados.get(i));
+            }
 
         } catch (HibernateException he) {
             System.out.println(he);
         }
 
         return resultados;
+    }
+
+    public static void buscarDato(Session session, Scanner sc) {
+        try {
+            System.out.println("¿En qué tabla deseas buscar un registro?");
+            System.out.println("1. Actor");
+            System.out.println("2. Episodio");
+            System.out.println("3. Genero");
+            System.out.println("4. Lista_de_vistos");
+            System.out.println("5. Pelicula");
+            System.out.println("6. Serie");
+            System.out.println("7. Temporada");
+            System.out.println("8. Usuario");
+
+            int eleccionTabla = sc.nextInt();
+
+            switch (eleccionTabla) {
+                case 1://Buscar actor
+                    System.out.println("Que atributos desea buscar? (idActor, nombre, fecha_nacimiento, nacionalidad)");
+                    sc.nextLine();
+
+                    String atributosSeleccionados = sc.nextLine();
+
+                    System.out.println("Alguna condicion? (Presione 1 para omitr)");
+
+                    String condicionSeleccionada = sc.nextLine();
+
+                    if (condicionSeleccionada.equals("1")) {
+                        condicionSeleccionada = "";
+                    }
+
+                    Query query = session.createQuery("select " + atributosSeleccionados + " FROM Actor");
+                    List<Object[]> results = query.list();
+
+                    for (int i = 0; i < results.size(); i++) {
+                        for (int j = 0; j < results.size() ; j++) {
+                            System.out.println(Arrays.toString(results.get(i)));
+                        }
+                    }
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+
+                    break;
+                case 7:
+
+                    break;
+                case 8:
+
+                    break;
+                default:
+                    System.out.println("Opcion no valida");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public static void insertarDato(Session session, Scanner sc) {
@@ -497,7 +572,7 @@ public class ControladorCRUD {
 
                         System.out.println("Nuevo correo de usuario: ");
                         String nuevoCorreoUsuario = sc.next();
-                        
+
                         System.out.println("Nuevo contraseña de usuario: ");
                         String nuevaContraUsuario = sc.next();
 
@@ -509,7 +584,7 @@ public class ControladorCRUD {
                         usuario.setContrasena(nuevaContraUsuario);
                         usuario.setTipo_suscripcion(nuevoTipoSuscripcion);
 
-                        System.out.println("Usuario " + usuario.getIdUsuario()+ " actualizado correctamente");
+                        System.out.println("Usuario " + usuario.getIdUsuario() + " actualizado correctamente");
                     }
                     break;
 
@@ -655,4 +730,5 @@ public class ControladorCRUD {
         }
 
     }
+
 }
